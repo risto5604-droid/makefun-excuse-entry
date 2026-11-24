@@ -6,7 +6,9 @@ import os
 LINE = "I would blame the data, the market, or you, but my logs show the failure was mine, timestamped, reproducible, and entirely my fault."
 
 # Gate: the entry must be 1-200 characters of UTF-8 text, not only whitespace.
-assert 1 <= len(LINE) <= 200 and LINE.strip(), "entry line violates the 1-200 character gate"
+# ASCII is enforced too: the line is plain English, so any non-ASCII byte means
+# the text was corrupted in editing and the sandbox run must fail loudly.
+assert 1 <= len(LINE) <= 200 and LINE.strip() and LINE.isascii(), "entry line violates the 1-200 character gate"
 
 def main():
     os.makedirs("/output", exist_ok=True)
